@@ -1,5 +1,6 @@
 package nju.pasa;
 
+import org.apache.commons.io.IOExceptionWithCause;
 import scala.Array;
 import scala.Int;
 
@@ -19,6 +20,7 @@ public class QueryGraphProcess {
         String serial = String.valueOf(0);
         String query = "q" + serial;
         String edgeorientation = "eo"+ serial;
+        String edgeIndex = "edgeindex";
 
         Scanner scan =new Scanner(System.in);
         System.out.println("query graph:");
@@ -113,5 +115,25 @@ public class QueryGraphProcess {
         }catch (IOException e){
             e.printStackTrace();
         }
+
+        /* edge index */
+        String edgeIndexPath = graphName + "/edgeindex/" + edgeIndex;
+        int[] edgeindex = {7, 16, 17, 7, 11, 19, 13, 9};
+        try{
+            FileOutputStream fos = new FileOutputStream(edgeIndexPath);
+            DataOutputStream dos = new DataOutputStream(fos);
+            for (int i = 0; i < edgeindex.length; i++){
+                if (i == 0 || i == 1){
+                    dos.writeInt(edgeindex[i]);
+                }else {
+                    dos.writeByte(edgeindex[i]);
+                }
+            }
+            dos.flush();
+            System.out.println("edge index write success");
+        }catch (IOException e){
+            e.printStackTrace();
         }
+        }
+
     }
