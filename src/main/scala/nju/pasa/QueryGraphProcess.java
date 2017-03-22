@@ -17,15 +17,14 @@ public class QueryGraphProcess {
     public static void main(String[] args) {
 
         String graphName = "sample";
-        String serial = String.valueOf(0);
+        String serial = String.valueOf(10);
         String query = "q" + serial;
         String edgeorientation = "eo"+ serial;
         String edgeIndex = "edgeindex";
 
         Scanner scan =new Scanner(System.in);
-        System.out.println("query graph:");
+        System.out.println("query graph: q" + serial);
         String[] strInput = scan.nextLine().split(" ");
-        System.out.println(strInput.length);
 
         HashMap<Integer, ArrayList<Integer>> edgeList = new HashMap();
 
@@ -55,8 +54,10 @@ public class QueryGraphProcess {
             FileOutputStream fis = new FileOutputStream(queryGraphPath);
             DataOutputStream dis = new DataOutputStream(fis);
             int line = edgeList.size();
-            System.out.println("line:" + line);
+            //System.out.println("line:" + line);
             int count = 1;
+            System.out.println("query graph write info :");
+            System.out.println(query + ":");
             for(Map.Entry<Integer, ArrayList<Integer>> ele : edgeList.entrySet()){
                 StringBuilder sb = new StringBuilder();
                 sb.append(ele.getKey().toString());
@@ -68,6 +69,7 @@ public class QueryGraphProcess {
                 sb.append("\n");
                 count = count + 1;
                 dis.writeBytes(sb.toString());
+                System.out.println(sb.toString());
             }
             dis.flush();
             System.out.println("query graph write success");
@@ -76,23 +78,26 @@ public class QueryGraphProcess {
         }
 
         /* edge orientation */
+        System.out.println("automorphism info:");
         String edgeOrientationPath = graphName + "/querygraph/" + edgeorientation;
+        String[] automorphismInfo = scan.nextLine().split(" ");
+        System.out.println("edge orientation write info :");
         try{
             FileOutputStream fis = new FileOutputStream(edgeOrientationPath);
             DataOutputStream dis = new DataOutputStream(fis);
             int edgeOrientationSize = 1;
             int size = edgeList.size();
             dis.writeInt(edgeOrientationSize);
+            System.out.println("edgeOrientationSize" + edgeOrientationSize);
 
             // write vertexIdIndexMap
             for (int i = 0; i < size; i++){
                 dis.writeInt(i);
+                System.out.println("key: " + i);
                 dis.writeInt(i);
+                System.out.println("label:" + i);
             }
 
-            // automorphism info
-            System.out.println("automorphism info:");
-            String[] automorphismInfo = scan.nextLine().split(" ");
 
             // write edgeSequenceMatrix
             int[][] edgeSequenceMatrix = new int[size][size];
@@ -100,6 +105,7 @@ public class QueryGraphProcess {
                 for (int j = 0; j < size; j++){
                    edgeSequenceMatrix[i][j] = Integer.valueOf(automorphismInfo[size * i + j]);
                    dis.writeByte(edgeSequenceMatrix[i][j]);
+                    System.out.printf(edgeSequenceMatrix[i][j] + " ");
                 }
             }
             dis.flush();
@@ -117,6 +123,7 @@ public class QueryGraphProcess {
         }
 
         /* edge index */
+        System.out.println("edge index write info :");
         String edgeIndexPath = graphName + "/edgeindex/" + edgeIndex;
         int[] edgeindex = {7, 16, 17, 7, 11, 19, 13, 9};
         try{
@@ -128,12 +135,21 @@ public class QueryGraphProcess {
                 }else {
                     dos.writeByte(edgeindex[i]);
                 }
+                System.out.print(edgeindex[i] + " ");
             }
             dos.flush();
-            System.out.println("edge index write success");
+            System.out.println("\n edge index write success");
         }catch (IOException e){
             e.printStackTrace();
         }
         }
 
     }
+/**
+ *
+ * write example
+ * triangle: 0 1 2, 0 < 1 < 2
+ * first input (query graph): 0 1 0 2 1 2
+ * second input (automorphism): 0 1 1 2 0 1 2 2 0
+ *
+ * */
