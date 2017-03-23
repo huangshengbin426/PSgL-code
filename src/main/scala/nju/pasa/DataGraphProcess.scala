@@ -5,7 +5,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 /**
   * Created by Huangsb on 2017/3/20.
   */
-object DatagGraphProcess {
+object DataGraphProcess {
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setAppName("PSgLGraphProcess")
     conf.set("spark.rdd.compress", "true")
@@ -19,7 +19,7 @@ object DatagGraphProcess {
     val lines = sc.textFile(originInputPath)
     val edge = lines.mapPartitions{str =>
       val edgeIter = str.map{v =>
-        val edge = v.split("\t")
+        val edge = v.split("\\s+")
         val src = edge(0).toInt
         val dst = edge(1).toInt
         (src, dst)
@@ -63,11 +63,11 @@ object DatagGraphProcess {
     }
 //    vertex2labelmap.collect().foreach(println(_))
 
-    val graphName = "sample"
+    val graphName = "USPatents"
     val fileOutputPath = args(1)
 
-    dataGraphInputFormat.saveAsTextFile(fileOutputPath + graphName + "/graph/datagraph")
-    vertex2labelmap.saveAsTextFile(fileOutputPath + graphName + "/vertex2labelmap/vertex2labelmap")
+    dataGraphInputFormat.saveAsTextFile(fileOutputPath + "/" +graphName + "/graph/datagraph")
+    vertex2labelmap.saveAsTextFile(fileOutputPath + "/" +graphName + "/vertex2labelmap/vertex2labelmap")
 
   }
 }
