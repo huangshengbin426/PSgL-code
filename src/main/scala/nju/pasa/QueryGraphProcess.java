@@ -89,6 +89,7 @@ public class QueryGraphProcess {
             int size = edgeList.size();
             dis.writeInt(edgeOrientationSize);
             System.out.println("edgeOrientationSize" + edgeOrientationSize);
+            dis.writeInt(size);
 
             // write vertexIdIndexMap
             for (int i = 0; i < size; i++){
